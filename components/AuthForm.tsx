@@ -24,6 +24,7 @@ import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import SignUp from '@/app/(auth)/sign-up/page'
+import { signIn, signUp } from '@/lib/actions/user.action'
 
 const AuthForm = ({ type }: { type: String}) => {
     const router = useRouter
@@ -49,18 +50,18 @@ const AuthForm = ({ type }: { type: String}) => {
         // Sign up with Appwrite & create plaid token
 
         if(type === 'sign-up'){
-            // const newUser = await SignUp(data);
+            const newUser = await signUp(data);
             
-            // setUser(newUser);
+            setUser(newUser);
         }
 
         if(type === 'sign-in'){
-            const response = await SignIn({
-                email: data.email,
-                password: data.password,
-            })
+           // const response = await signIn({
+           //     email: data.email,
+           //     password: data.password,
+           // })
 
-            if(response) router.push('/')
+           // if(response) router.push('/')
         }
 
     } catch(error) {
@@ -73,14 +74,14 @@ const AuthForm = ({ type }: { type: String}) => {
   return (
     <section className='auth-form'>
         <header className='flex flex-col gap-5 md:gap-8'>
-        <Link href="/" className= "cursor-pointer flex items-center gap-1">
-            <Image src="/icons/logo.svg"
-            width={34}
-            height={34}
-            alt='Horizon logo'
-            />
-            <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Horizon</h1>
-          </Link>  
+            <Link href="/" className= "cursor-pointer flex items-center gap-1">
+                <Image src="/icons/logo.svg"
+                width={34}
+                height={34}
+                alt='Horizon logo'
+                />
+                <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Horizon</h1>
+            </Link>  
 
           <div className='flex flex-col gap-1 md:gap-3'>
             <h1 className='text-24 lg:text-36 font-semibold text-gray-900'>
