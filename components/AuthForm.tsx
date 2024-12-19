@@ -22,10 +22,13 @@ import { useForm } from "react-hook-form"
 import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import SignUp from '@/app/(auth)/sign-up/page'
 
 const AuthForm = ({ type }: { type: String}) => {
+    const router = useRouter
     const [user, setUser] = useState(null);
-    const [isLoading, setisLoading] = useState(false); 
+    const [isLoading, setIsLoading] = useState(false); 
 
     const formSchema = authFormSchema( type );
     
@@ -39,10 +42,32 @@ const AuthForm = ({ type }: { type: String}) => {
   })
  
   // 2. Define a submit handler.
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setisLoading(true)
-    console.log(values)
-    setisLoading(false);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+
+    try {
+        // Sign up with Appwrite & create plaid token
+
+        if(type === 'sign-up'){
+            // const newUser = await SignUp(data);
+            
+            // setUser(newUser);
+        }
+
+        if(type === 'sign-in'){
+            const response = await SignIn({
+                email: data.email,
+                password: data.password,
+            })
+
+            if(response) router.push('/')
+        }
+
+    } catch(error) {
+      console.log(error)
+    } finally {
+    setIsLoading(false);
+    }
   }
 
   return (
@@ -89,6 +114,7 @@ const AuthForm = ({ type }: { type: String}) => {
                               <CustomInput control={form.control} name='lasttName' label="Last Name" placeholder='Enter your last name'/>
                             </div>
                               <CustomInput control={form.control} name='address1' label="Address" placeholder='Enter your specific address'/>
+                              <CustomInput control={form.control} name='city' label="City" placeholder='Enter your city'/>
                             <div className="flex gap-4">
                               <CustomInput control={form.control} name='state' label="State" placeholder='Example: NY'/>
                               <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder='Example: 11101'/>
